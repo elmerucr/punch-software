@@ -1,3 +1,5 @@
+-- Original version 20240622
+
 local color = 10
 
 local ticks
