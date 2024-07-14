@@ -8,18 +8,18 @@ local counter
 function init()
   -- make blitter cause interrupts at start of frame
   -- this will call the lua function frame()
-  pokeb(0x801, 1)
+  poke(0x801, 1)
 
   -- timer stuff
-  pokew(0xa10, 3008)
-  pokeb(0xa01, 1)
+  poke16(0xa10, 3008)
+  poke(0xa01, 1)
 
   -- init sound
   ticks = 50
   counter = 1
   -- pulse width
-  pokew(0xc02, 0x0f0f)
-  pokew(0xc0a, 0x0f0f)
+  poke16(0xc02, 0x0f0f)
+  poke16(0xc0a, 0x0f0f)
 end
 
 function timer0()
@@ -27,9 +27,9 @@ function timer0()
 end
 
 function frame()
-  pokeb(0xe05, color)	-- target color
-  pokeb(0xe03, 0xf)	-- target surface = 0xf
-  pokeb(0xe01, 4)	-- clear surface command
+  poke(0xe05, color)	-- target color
+  poke(0xe03, 0xf)	-- target surface = 0xf
+  poke(0xe01, 4)	-- clear surface command
   color = color + 1
   if color == 20 then color = 10 end
 end
@@ -75,16 +75,16 @@ local track2 = {
 function do_sound()
     if ticks == 0 then
         if track1[counter] ~= 0 then
-            pokew(0xc80, track1[counter])
-            pokeb(0xc85, 0x04)
-	    pokeb(0xc86, 0x15)
-	    pokeb(0xc84, 0x41)
+            poke16(0xc80, track1[counter])
+            poke(0xc85, 0x04)
+	    poke(0xc86, 0x15)
+	    poke(0xc84, 0x41)
         end
         if track2[counter] ~= 0 then
-	    pokew(0xc88, track2[counter])
-	    pokeb(0xc8d, 0x04)
-	    pokeb(0xc8e, 0x15)
-            pokeb(0xc8c, 0x41)
+	    poke16(0xc88, track2[counter])
+	    poke(0xc8d, 0x04)
+	    poke(0xc8e, 0x15)
+            poke(0xc8c, 0x41)
         end
         ticks = 10
         counter = counter + 1
@@ -92,13 +92,13 @@ function do_sound()
             counter = 1
         end
     elseif ticks == 2 then
-        pokeb(0xc85, 0x00)
-	pokeb(0xc86, 0x00)
-	pokeb(0xc84, 0x40)
+        poke(0xc85, 0x00)
+	poke(0xc86, 0x00)
+	poke(0xc84, 0x40)
 
-	pokeb(0xc8d, 0x00)
-	pokeb(0xc8e, 0x00)
-	pokeb(0xc8c, 0x40)
+	poke(0xc8d, 0x00)
+	poke(0xc8e, 0x00)
+	poke(0xc8c, 0x40)
     end
     ticks = ticks - 1
 end
