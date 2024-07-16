@@ -15,7 +15,7 @@ function init()
 	-- this will call the lua function frame()
 	poke(0x801, 1)
 
-	-- timer stuff
+	-- timer stuff, 3008bpm
 	-- this will call the lua function timer0()
 	poke16(0xa10, 3008)
 	poke(0xa01, 1)
