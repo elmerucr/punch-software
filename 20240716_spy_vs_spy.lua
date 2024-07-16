@@ -1,7 +1,8 @@
 -- Newer version 20240716
 -- Uses coroutines
 
-local color = 10
+local color = 16
+local count = 0
 
 function breakhere(no)
 	for i=1, no do
@@ -15,13 +16,9 @@ function init()
 	poke(0x801, 1)
 
 	-- timer stuff
+	-- this will call the lua function timer0()
 	poke16(0xa10, 3008)
 	poke(0xa01, 1)
-
-	-- set pulse width
-	poke16(0xc82, 0x0f0f)
-	poke16(0xc8a, 0x0f0f)
-	poke16(0xc92, 0x0f0f)
 
 	co_t1 = coroutine.create(do_track)
 	co_t2 = coroutine.create(do_track)
@@ -38,15 +35,19 @@ function frame()
 	poke(0xe05, color)	-- target color
 	poke(0xe03, 0xf)	-- target surface = 0xf
 	poke(0xe01, 4)	-- clear surface command
-	color = color + 1
-	if color == 20 then color = 10 end
+	if count == 0 then
+		color = color + 1
+		count = 10
+	end
+	count = count - 1
+	if color == 20 then color = 16 end
 end
 
 local pattern = {
 	{
-		{ 0},
-		{80},
-		{ 1}
+		{ 0, 95},
+		{60, 20},
+		{ 1,  3}
 	},
 	{
 		{38, 50, 57, 62, 38, 50, 95},
@@ -68,7 +69,7 @@ local pattern = {
 		{10, 10, 10, 10, 10, 10, 10, 10},
 		{ 1,  1,  1,  1,  1,  1,  1,  1}
 	},
-	-- (6) melody
+	-- melody
 	{
 		{77, 74, 77, 70, 72, 70, 69, 65, 67, 70, 67, 69},
 		{80, 60, 20, 60, 10, 10, 80,160, 20, 40, 20, 80},
@@ -93,9 +94,10 @@ function do_track(track_no)
 		for i=1, #song[track_no] do
 			-- iterate through number of patterns in track
 			for j=1, #pattern[song[track_no][i]][1] do
+				-- iterate through number of notes in pattern
 				local note = pattern[song[track_no][i]][1][j]
 				local instr = instrument[pattern[song[track_no][i]][3][j]]
-				-- start note if not 0
+				-- start note if not equal to 0
 				if note ~= 0 then
 					poke16(0xc78 + (track_no * 8), midi[note])
 					poke16(0xc7a + (track_no * 8), instr[1])
