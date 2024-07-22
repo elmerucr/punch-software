@@ -1,18 +1,14 @@
--- Newer version 20240716
+-- Newer version 20240722
 -- Uses coroutines
 
 local color = 16
 local count = 0
 
-function breakhere(no)
-	for i=1, no do
-		coroutine.yield()
-	end
-end
-
 function init()
-	-- make blitter cause interrupts at start of frame
-	-- this will call the lua function frame()
+	-- Make blitter cause interrupts at the start of each frame, just
+	-- after screen refresh. The kernel will attempt to call the Lua
+	-- function frame(). The system will drop to debug if it has not
+	-- been defined.
 	poke(0x801, 1)
 
 	-- timer stuff, 3008bpm
@@ -23,12 +19,34 @@ function init()
 	co_t1 = coroutine.create(do_track)
 	co_t2 = coroutine.create(do_track)
 	co_t3 = coroutine.create(do_track)
+
+	co_lines = coroutine.create(draw_lines)
 end
 
 function timer0()
 	coroutine.resume(co_t1, 1)
 	coroutine.resume(co_t2, 2)
 	coroutine.resume(co_t3, 3)
+end
+
+function draw_lines()
+	local x0 = 0
+	local y0 = 0
+	local dx = 1
+	local dy = 1
+
+	while true do
+		solid_rectangle(150, 90, 155, 110, 0xc3, 15)
+		line(x0, y0, 319 - x0, 179, 51, 15)
+		line(x0, 179, 319 - x0, 0, 51, 15)
+		x0 = x0 + dx
+		if x0 == 319 then dx = -dx end
+		if x0 == 0 then dx = -dx end
+		rectangle(10, 10, 40, 40, 0xc3, 15)
+		breakhere(1)
+	end
+
+
 end
 
 function frame()
@@ -41,7 +59,15 @@ function frame()
 	end
 	count = count - 1
 	if color == 20 then color = 16 end
+
+	coroutine.resume(co_lines)
 end
+
+local instrument = {
+	{ 0x0f0f, 0x04, 0x15, 0x41 },
+	{ 0x0000, 0x26, 0x14, 0x11 },
+	{ 0x0000, 0x01, 0x12, 0x81 }
+}
 
 local pattern = {
 	{
@@ -75,12 +101,6 @@ local pattern = {
 		{80, 60, 20, 60, 10, 10, 80,160, 20, 40, 20, 80},
 		{ 2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2,  2}
 	}
-}
-
-local instrument = {
-	{ 0x0f0f, 0x04, 0x15, 0x41 },
-	{ 0x0000, 0x26, 0x14, 0x11 },
-	{ 0x0000, 0x01, 0x12, 0x81 }
 }
 
 local song = {
