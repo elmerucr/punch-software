@@ -1,5 +1,7 @@
--- Newer version 20240722
--- Uses coroutines
+-- Version 20240722
+-- Using coroutines, pushing them into a table and iterating through
+-- them. Both 'startthread' and 'breakhere' inspired by Ron Gilbert and
+-- Thimbleweed Park Blogs on scripting.
 
 local color = 16
 local count = 0
@@ -7,7 +9,7 @@ local count = 0
 local tasks = {}
 
 function startthread(f, t)
-	table.insert(tasks, coroutine.create(f))
+	table.insert(tasks, {coroutine.create(f), t})
 end
 
 function init()
@@ -26,20 +28,12 @@ function init()
 	startthread(do_track, 2)
 	startthread(do_track, 3)
 
-	--co_t1 = coroutine.create(do_track)
-	co_t2 = coroutine.create(do_track)
-	co_t3 = coroutine.create(do_track)
-
 	co_lines = coroutine.create(draw_lines)
 end
 
 function timer0()
-	--coroutine.resume(co_t1, 1)
-	coroutine.resume(co_t2, 2)
-	coroutine.resume(co_t3, 3)
-
 	for key, value in pairs(tasks) do
-		coroutine.resume(value, 1)
+		coroutine.resume(value[1], value[2])
 	end
 end
 
@@ -78,9 +72,9 @@ function frame()
 end
 
 local instrument = {
-	{ 0x0f0f, 0x04, 0x15, 0x41 },
-	{ 0x0000, 0x26, 0x14, 0x11 },
-	{ 0x0000, 0x01, 0x12, 0x81 }
+	{ 0x0f0f, 0x04, 0x15, 0x41 },	-- bass
+	{ 0x0000, 0x26, 0x14, 0x11 },	-- flute
+	{ 0x0000, 0x01, 0x12, 0x81 }	-- snare
 }
 
 local pattern = {
