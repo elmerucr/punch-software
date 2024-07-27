@@ -21,8 +21,9 @@ function draw_lines()
 	local dx = 1
 	local dy = 1
 
-	while (true)
-	{
+	while (true) {
+		breakhere(1)
+
 		solid_rectangle(150, 90, 155, 110, 0xc3, 15)
 		line(x0, y0, 319 - x0, 179, 51, 15)
 		line(x0, 179, 319 - x0, 0, 51, 15)
@@ -34,7 +35,6 @@ function draw_lines()
 			dx = -dx
 		}
 		rectangle(10, 10, 40, 40, 0xc3, 15)
-		breakhere(1)
 	}
 }
 
@@ -71,6 +71,7 @@ function solid_rectangle(x0, y0, x1, y1, color, surface)
 	poke(0xe01, 0x20)
 }
 
+// coroutine starts idle
 local co_lines = ::newthread(draw_lines)
 co_lines.call()
 

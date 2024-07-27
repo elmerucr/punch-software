@@ -53,8 +53,6 @@ function draw_lines()
 		rectangle(10, 10, 40, 40, 0xc3, 15)
 		breakhere(1)
 	end
-
-
 end
 
 function frame()
