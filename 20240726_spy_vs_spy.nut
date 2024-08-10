@@ -1,8 +1,11 @@
 /*
  * spy_vs_spy.nut
  *
- * Version 20240810
+ * Version 20240726
  */
+
+local color = 16
+local count = 10
 
 function breakhere(number)
 {
@@ -68,19 +71,20 @@ function solid_rectangle(x0, y0, x1, y1, color, surface)
 	poke(0xe01, 0x20)
 }
 
+// coroutines always start idle, so must use call()
+local co_lines = ::newthread(draw_lines)
+co_lines.call()
+
 function frame()
 {
 	poke(0xe05, color)	// target color
 	poke(0xe03, 0xf)	// target surface = 0xf
 	poke(0xe01, 4)		// clear surface command
-
 	if (count == 0) {
 		color++
 		count = 10
 	}
-
 	count--
-
 	if (color == 20) {
 		color = 16
 	}
@@ -101,11 +105,4 @@ function init()
 	 */
 	//poke16(0xa10, 3008)
 	//poke(0xa01, 1)
-
-	color <- 16
-	count <- 10
-
-	// coroutines always start idle, so must use call()
-	co_lines <- ::newthread(draw_lines)
-	co_lines.call()
 }
