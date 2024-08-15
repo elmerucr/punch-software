@@ -1,7 +1,6 @@
 /*
  * spy_vs_spy.nut
- * Version 20240815
- * elmerucr
+ * Version 20240814
  */
 
 function startthread(f, t) {
@@ -80,11 +79,11 @@ function frame() {
 	co_lines.wakeup()
 }
 
-// instrument <- [
-// 	[ 0x0f0f, 0x04, 0x15, 0x41 ],	// bass
-// 	[ 0x0000, 0x26, 0x14, 0x11 ],	// flute
-// 	[ 0x0000, 0x01, 0x12, 0x81 ]	// snare
-// ]
+instrument <- [
+	[ 0x0f0f, 0x04, 0x15, 0x41 ],	// bass
+	[ 0x0000, 0x26, 0x14, 0x11 ],	// flute
+	[ 0x0000, 0x01, 0x12, 0x81 ]	// snare
+]
 
 pattern <- [
 	[
@@ -126,51 +125,6 @@ song <- [
 	[5, 0, 0, 0, 0]
 ]
 
-song2 <- {
-	instruments = [
-		[ 0x0f0f, 0x04, 0x15, 0x41 ],	// bass
-		[ 0x0000, 0x26, 0x14, 0x11 ],	// flute
-		[ 0x0000, 0x01, 0x12, 0x81 ]	// snare
-	]
-	patterns = [
-		[
-			[ 0, 95],
-			[60, 20],
-			[ 0,  2]
-		],
-		[
-			[38, 50, 57, 62, 38, 50, 95],
-			[10, 10, 10, 10, 10, 10, 20],
-			[ 0,  0,  0,  0,  0,  0,  2]
-		],
-		[
-			[34, 46, 53, 58, 34, 46, 95],
-			[10, 10, 10, 10, 10, 10, 20],
-			[ 0,  0,  0,  0,  0,  0,  2]
-		],
-		[
-			[31, 43, 50, 55, 31, 43, 95],
-			[10, 10, 10, 10, 10, 10, 20],
-			[ 0,  0,  0,  0,  0,  0,  2]
-		],
-		[
-			[36, 48, 55, 60, 33, 45, 52, 57],
-			[10, 10, 10, 10, 10, 10, 10, 10],
-			[ 0,  0,  0,  0,  0,  0,  0,  0]
-		],
-		[
-			[77, 74, 77, 70, 72, 70, 69, 65, 67, 70, 67, 69],
-			[80, 60, 20, 60, 10, 10, 80,160, 20, 40, 20, 80],
-			[ 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1]
-		]
-	]
-	tracks = [
-		[1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4],
-		[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
-		[5, 0, 0, 0, 0]
-	]
-}
-
 function do_track(track_no) {
 	while (true) {
 		for (local i=0; i < song[track_no].len(); i++) {
@@ -178,7 +132,7 @@ function do_track(track_no) {
 			for (local j=0; j < pattern[ song[track_no][i] ][0].len(); j++) {
 				// iterate through number of notes in pattern
 				local note = pattern[song[track_no][i]][0][j]
-				local instr = song2.instruments[pattern[ song[track_no] [i]][2][j]]
+				local instr = instrument[pattern[ song[track_no] [i]][2][j]]
 				// start note if not equal to 0
 				if (note != 0) {
 					poke16(0xc80 + (track_no * 8), midi[note])
