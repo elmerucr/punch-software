@@ -1,8 +1,10 @@
 /*
  * spy_vs_spy.nut
- * Version 20240815
+ * Version 20240816
  * elmerucr
  */
+
+dofile("music_player.nut", true)
 
 function startthread(f, t) {
 	tasks.append([::newthread(f), t])
