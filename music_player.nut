@@ -1,1 +1,1 @@
-print("test\n")
+print("\nmusic_player.nut file was run\n")
