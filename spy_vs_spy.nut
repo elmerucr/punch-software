@@ -1,40 +1,46 @@
 /*
  * spy_vs_spy.nut
- * Version 20240816
+ * Version 20240919
  * elmerucr
  */
 
-dofile("music_player.nut", true)
+dofile("test.nut", true)
 
 function startthread(f, t) {
 	tasks.append([::newthread(f), t])
 }
 
+/*
+ * The init function will be called immediately after script loading.
+ * The machine will halt if this function is not defined.
+ */
+
 function init() {
 	/*
-	 * Cause frame done interrupt just after screen refresh and a call
-	 * to the frame() function.
+	 * Activate frame done interrupt which happens directly after each
+	 * screen refresh and calls the squirrel frame() function.
 	 */
 	poke(0x801, 1)
 
 	/*
-	 * Timer stuff. Timer0 at 3008bpm, and activate it. This will call
-	 * squirrel timer0() function.
+	 * Timer stuff. Set Timer0 at 3008bpm, and activate it. This will
+	 * call squirrel timer0() function.
 	 */
 	poke16(0xa10, 3008)
 	poke(0xa01, 1)
 
-	// hack for screen background color
+	// Hack for screen background color
 	color <- 16
 	count <- 10
 
-	// coroutines always start idle, so must use call() once
+	// Coroutines always start idle, so must use call() once
 	co_lines <- ::newthread(draw_lines)
 	co_lines.call()
 
 	/*
 	 * Empty array for tasks
 	 */
+
 	tasks <- []
 	startthread(do_track, 0)
 	startthread(do_track, 1)
