@@ -1,10 +1,8 @@
 /*
  * spy_vs_spy.nut
- * Version 20240919
+ * Version 20240927
  * elmerucr
  */
-
-dofile("test.nut", true)
 
 function startthread(f, t) {
 	tasks.append([::newthread(f), t])
@@ -86,6 +84,26 @@ function frame() {
 	if (color == 20) color = 16
 
 	co_lines.wakeup()
+
+	for (local x=0x000; x<0x140; x++) {
+		pset(x, 0, x & 0xff, 0xf)
+		pset(0x140 - x, 179, x & 0xff, 0xf)
+	}
+
+	poke(0xe02, 0xe) // source is font
+	poke(0xe03, 0xf) // dest is framebuffer
+	poke(0x5e1, 0xcf) // color of index 1
+	poke16(0x4e2, 0x30) // ypos
+
+	local name = "testing string writing to screen"
+	local x = 0x30
+
+	for (local l=0; l < name.len(); l++) {
+		poke(0x4ef, name[l]) // point to letter 'E', which is 1 bit color
+		poke16(0x4e0, x) // xpos
+		x += 4
+		poke(0xe01, 0x01) // blit the char
+	}
 }
 
 song <- {
