@@ -63,8 +63,8 @@ function draw_lines() {
 	while (true) {
 		breakhere(1)
 		solid_rectangle(150, 90, 155, 110, 0xc3, 15)
-		line(x0, y0, 319 - x0, 179, 51, 15)
-		line(x0, 179, 319 - x0, 0, 51, 15)
+		line(x0, y0, 319 - x0, 199, 51, 15)
+		line(x0, 199, 319 - x0, 0, 51, 15)
 		x0 = x0 + dx
 		if (x0 == 319) dx = -dx
 		if (x0 == 0) dx = -dx
@@ -87,7 +87,7 @@ function frame() {
 
 	for (local x=0x000; x<0x140; x++) {
 		pset(x, 0, x & 0xff, 0xf)
-		pset(0x140 - x, 179, x & 0xff, 0xf)
+		pset(0x140 - x, 199, x & 0xff, 0xf)
 	}
 
 	poke(0xe02, 0xe) // source is font
