@@ -62,19 +62,19 @@ function draw_lines() {
 
 	while (true) {
 		breakhere(1)
-		solid_rectangle(150, 90, 155, 110, 0xc3, 15)
-		line(x0, y0, 319 - x0, 199, 51, 15)
-		line(x0, 199, 319 - x0, 0, 51, 15)
+		solid_rectangle(150, 90, 155, 110, 0xc3, 0)
+		line(x0, y0, 319 - x0, 199, 51, 0)
+		line(x0, 199, 319 - x0, 0, 51, 0)
 		x0 = x0 + dx
 		if (x0 == 319) dx = -dx
 		if (x0 == 0) dx = -dx
-		rectangle(10, 10, 40, 40, 0xc3, 15)
+		rectangle(10, 10, 40, 40, 0xc3, 0)
 	}
 }
 
 function frame() {
 	poke(0xe05, color)	// target color
-	poke(0xe03, 0xf)	// target surface = 0xf
+	poke(0xe03, 0x0)	// target surface = 0x0
 	poke(0xe01, 4)		// clear surface command
 	if (count == 0) {
 		color++
@@ -86,12 +86,12 @@ function frame() {
 	co_lines.wakeup()
 
 	for (local x=0x000; x<0x140; x++) {
-		pset(x, 0, x & 0xff, 0xf)
-		pset(0x140 - x, 199, x & 0xff, 0xf)
+		pset(x, 0, x & 0xff, 0x0)
+		pset(0x140 - x, 199, x & 0xff, 0x0)
 	}
 
 	poke(0xe02, 0xe) // source is font
-	poke(0xe03, 0xf) // dest is framebuffer
+	poke(0xe03, 0x0) // dest is framebuffer
 	poke(0x5e1, 0xcf) // color of index 1
 	poke16(0x4e2, 0x30) // ypos
 

@@ -78,7 +78,7 @@ co_lines.call()
 function frame()
 {
 	poke(0xe05, color)	// target color
-	poke(0xe03, 0xf)	// target surface = 0xf
+	poke(, 0x0)	// target surface = 0x0
 	poke(0xe01, 4)		// clear surface command
 	if (count == 0) {
 		color++
