@@ -45,7 +45,7 @@ function frame()
 	poke(0xe02,0x1)
 	poke(0xe03,0x0)
 
-	if (peek(0x980 + 0x41) != 0) {
+	if ((peek(0x980 + 0x41) & 1) != 0) {
 		// cursor left
 		offset_x++
 	}
@@ -55,11 +55,11 @@ function frame()
 	}
 	if ((peek(0x980 + 0x42) & 1) != 0) {
 		// cursor up
-		offset_y++
+		offset_y += 0.5
 	}
 	if ((peek(0x980 + 0x43) & 1) != 0) {
 		// cursor down
-		offset_y--
+		offset_y -= 0.5
 	}
 
 	local offset_z = 0
