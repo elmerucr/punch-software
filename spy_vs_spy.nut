@@ -1,6 +1,6 @@
 /*
  * spy_vs_spy.nut
- * Version 20240927
+ * Version 20241107
  * elmerucr
  */
 
@@ -18,7 +18,7 @@ function init() {
 	 * Activate frame done interrupt which happens directly after each
 	 * screen refresh and calls the squirrel frame() function.
 	 */
-	poke(0x801, 1)
+	poke(0x401, 1)
 
 	/*
 	 * Timer stuff. Set Timer0 at 3008bpm, and activate it. This will
@@ -92,15 +92,15 @@ function frame() {
 
 	poke(0xe02, 0xe) // source is font
 	poke(0xe03, 0x0) // dest is framebuffer
-	poke(0x5e1, 0xcf) // color of index 1
-	poke16(0x4e2, 0x30) // ypos
+	poke(0x11e1, 0xcf) // color of index 1
+	poke16(0x10e2, 0x30) // ypos
 
 	local name = "testing string writing to screen"
 	local x = 0x30
 
 	for (local l=0; l < name.len(); l++) {
-		poke(0x4ef, name[l]) // point to letter 'E', which is 1 bit color
-		poke16(0x4e0, x) // xpos
+		poke(0x10ef, name[l]) // point to letter 'E', which is 1 bit color
+		poke16(0x10e0, x) // xpos
 		x += 4
 		poke(0xe01, 0x01) // blit the char
 	}
@@ -151,17 +151,17 @@ function do_track(track_no) {
 			foreach (note in song.patterns[pattern_no]) {
 				local instr = song.instruments[note[2]]
 				if (note[0] != 0) {
-					poke16(0xc80 + (track_no * 8), midi[note[0]])
-					poke16(0xc82 + (track_no * 8), instr[0])
-					poke  (0xc85 + (track_no * 8), instr[1])
-					poke  (0xc86 + (track_no * 8), instr[2])
-					poke  (0xc84 + (track_no * 8), instr[3])
+					poke16(0x680 + (track_no * 8), midi[note[0]])
+					poke16(0x682 + (track_no * 8), instr[0])
+					poke  (0x685 + (track_no * 8), instr[1])
+					poke  (0x686 + (track_no * 8), instr[2])
+					poke  (0x684 + (track_no * 8), instr[3])
 				}
 				breakhere(note[1] - 2)
 				// end note
-				poke(0xc85 + (track_no * 8), 0x00)
-				poke(0xc86 + (track_no * 8), 0x00)
-				poke(0xc84 + (track_no * 8), instr[3] - 1)
+				poke(0x685 + (track_no * 8), 0x00)
+				poke(0x686 + (track_no * 8), 0x00)
+				poke(0x684 + (track_no * 8), instr[3] - 1)
 				breakhere(2)
 			}
 		}
