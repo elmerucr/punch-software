@@ -24,8 +24,8 @@ function init() {
 	 * Timer stuff. Set Timer0 at 3008bpm, and activate it. This will
 	 * call squirrel timer0() function.
 	 */
-	poke16(0xa10, 3008)
-	poke(0xa01, 1)
+	poke16(0x430, 3008)
+	poke(0x421, 1)
 
 	// Hack for screen background color
 	color <- 16
@@ -73,9 +73,9 @@ function draw_lines() {
 }
 
 function frame() {
-	poke(0xe05, color)	// target color
-	poke(0xe03, 0x0)	// target surface = 0x0
-	poke(0xe01, 4)		// clear surface command
+	poke(0x805, color)	// target color
+	poke(0x803, 0x0)	// target surface = 0x0
+	poke(0x801, 4)		// clear surface command
 	if (count == 0) {
 		color++
 		count = 10
@@ -90,19 +90,19 @@ function frame() {
 		pset(0x140 - x, 199, x & 0xff, 0x0)
 	}
 
-	poke(0xe02, 0xe) // source is font
-	poke(0xe03, 0x0) // dest is framebuffer
-	poke(0x11e1, 0xcf) // color of index 1
-	poke16(0x10e2, 0x30) // ypos
+	poke(0x802, 0xe) // source is font
+	poke(0x803, 0x0) // dest is framebuffer
+	poke(0xbe1, 0xcf) // color of index 1
+	poke16(0xae2, 0x30) // ypos
 
 	local name = "testing string writing to screen"
 	local x = 0x30
 
 	for (local l=0; l < name.len(); l++) {
-		poke(0x10ef, name[l]) // point to letter 'E', which is 1 bit color
-		poke16(0x10e0, x) // xpos
+		poke(0xaef, name[l]) // point to letter 'E', which is 1 bit color
+		poke16(0xae0, x) // xpos
 		x += 4
-		poke(0xe01, 0x01) // blit the char
+		poke(0x801, 0x01) // blit the char
 	}
 }
 
