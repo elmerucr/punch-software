@@ -39,6 +39,10 @@ function init()
 function frame()
 {
 	poke(0x805, 0x00)	// target color
+	// vpoke(0xf3e800, 0x05);
+	// vpoke(0xf3e801, 0x00);
+	// vpoke(0xf3e802, 0xf0);
+	// vpoke(0xf3e803, 0x00);
 	poke(0x803, 0x0)	// destination surface = 0x0 = screen
 	poke(0x801, 4)		// clear surface command
 
@@ -47,19 +51,19 @@ function frame()
 
 	if ((peek(0x580 + 0x41) & 1) != 0) {
 		// cursor left
-		offset_x++
+		offset_x +=2
 	}
 	if ((peek(0x580 + 0x44) & 1)!= 0) {
 		// cursor right
-		offset_x--
+		offset_x -=2
 	}
 	if ((peek(0x580 + 0x42) & 1) != 0) {
 		// cursor up
-		offset_y += 0.5
+		offset_y += 1
 	}
 	if ((peek(0x580 + 0x43) & 1) != 0) {
 		// cursor down
-		offset_y -= 0.5
+		offset_y -= 1
 	}
 
 	local offset_z = 0

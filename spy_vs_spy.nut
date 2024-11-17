@@ -92,11 +92,11 @@ function frame() {
 
 	poke(0x802, 0xe) // source is font
 	poke(0x803, 0x0) // dest is framebuffer
-	poke(0xbe1, 0xcf) // color of index 1
+	poke(0xbe1, 0xbf) // color of index 1
 	poke16(0xae2, 0x30) // ypos
 
-	local name = "testing string writing to screen"
-	local x = 0x30
+	local name = "Spy vs Spy Theme Music, (c)1984 Nick Scarim / Hiroyuki Masuno"
+	local x = 0x20
 
 	for (local l=0; l < name.len(); l++) {
 		poke(0xaef, name[l]) // point to letter 'E', which is 1 bit color
