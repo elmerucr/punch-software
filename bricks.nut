@@ -16,7 +16,7 @@ function init()
 		vpoke(0x10000+i, sprite.data[i])
 	}
 	for (local i=0; i<sprite.palette.len(); i++) {
-		poke(0x0b10+i, sprite.palette[i])
+		poke(0x1100+i, sprite.palette[i])
 	}
 
 	poke16(0x0a14, 16)
@@ -38,7 +38,7 @@ function init()
 
 function frame()
 {
-	poke(0x805, 0x00)	// target color
+	poke(0x805, 0x01)	// target color
 	// vpoke(0xf3e800, 0x05);
 	// vpoke(0xf3e801, 0x00);
 	// vpoke(0xf3e802, 0xf0);
