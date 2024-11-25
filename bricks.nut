@@ -39,6 +39,7 @@ function init()
 function frame()
 {
 	poke(0x805, 0x01)	// target color
+	poke(0x818, 0xff)	// max alpha
 	// vpoke(0xf3e800, 0x05);
 	// vpoke(0xf3e801, 0x00);
 	// vpoke(0xf3e802, 0xf0);
@@ -69,19 +70,29 @@ function frame()
 	local offset_z = 0
 
 	for (local z=-1; z<2; z++) {
-		for (local y=-20; y<20; y++) {
-			for (local x=-20; x<20; x++) {
+		for (local y=-40; y<40; y++) {
+			for (local x=-40; x<40; x++) {
 				local dist = (x*x)+(y*y)
+
+				local ry = (-(offset_y-100)/8) + ((offset_x-152)/16)
+				local rx = (-(offset_y-100)/8) + (-(offset_x-152)/16)
+				local od = (rx-x)*(rx-x)+(ry-y)*(ry-y)
+				if (od <= 85)
+					//poke(0x818,255)
+					poke(0x818,255-(3*od))
+				else
+					poke(0x818,0)
+
 				if (z == -1) {
 					poke(0x0a1f, 2)	// dirt
-					if (dist < 160) {
+					if (dist < 400) {
 						poke16(0x0a10, offset_x + (8 * x) - (8 * y))
 						poke16(0x0a12, offset_y + (4 * x) + (4 * y) - (8 * z))
 						poke(0x801, 0x01)
 					}
 				} else {
 					poke(0x0a1f, 3)	// stones
-					if ((dist < 70) && (dist > 50)) {
+					if ((dist < 200) && (dist > 50)) {
 						poke16(0x0a10, offset_x + (8 * x) - (8 * y))
 						poke16(0x0a12, offset_y + (4 * x) + (4 * y) - (8 * z))
 						poke(0x801, 0x01)
@@ -91,8 +102,9 @@ function frame()
 		}
 	}
 
-	poke16(0x0a10, 160)
-	poke16(0x0a12, 100)
-	poke(0x0a1f, 1) // "shadow"
-	poke(0x801, 0x01) // blit it
+	poke(0x805,0x33)
+	poke(0x818,0xff)
+	poke16(0x0808, 160)
+	poke16(0x080a, 100)
+	poke(0x801, 0x08)
 }
