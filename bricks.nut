@@ -39,7 +39,9 @@ function init()
 function frame()
 {
 	poke(0x805, 0x01)	// target color
-	poke(0x818, 0xff)	// max alpha
+	poke(0x819, 0xff)	// max gamma r
+	poke(0x81a, 0xff)	// max gamma g
+	poke(0x81b, 0xff)	// max gamma b
 	// vpoke(0xf3e800, 0x05);
 	// vpoke(0xf3e801, 0x00);
 	// vpoke(0xf3e802, 0xf0);
@@ -77,11 +79,15 @@ function frame()
 				local ry = (-(offset_y-100)/8) + ((offset_x-152)/16)
 				local rx = (-(offset_y-100)/8) + (-(offset_x-152)/16)
 				local od = (rx-x)*(rx-x)+(ry-y)*(ry-y)
-				if (od <= 85)
-					//poke(0x818,255)
-					poke(0x818,255-(3*od))
-				else
-					poke(0x818,0)
+				if (od <= 85) {
+					poke(0x819, 255-(3*od))
+					poke(0x81a, 255-(3*od))
+					poke(0x81b, 255-(3*od))
+				} else {
+					poke(0x819, 0)
+					poke(0x81a, 0)
+					poke(0x81b, 0)
+				}
 
 				if (z == -1) {
 					poke(0x0a1f, 2)	// dirt
@@ -103,7 +109,9 @@ function frame()
 	}
 
 	poke(0x805,0x33)
-	poke(0x818,0xff)
+	poke(0x819, 0xff)
+	poke(0x81a, 0xff)
+	poke(0x81b, 0xff)
 	poke16(0x0808, 160)
 	poke16(0x080a, 100)
 	poke(0x801, 0x08)
