@@ -5,7 +5,7 @@
  * (C)2024 elmerucr
  */
 
-dofile("iso_brick.nut")
+dofile("16-16-8_data.nut")
 
 offset_x <- 136
 offset_y <- 81
@@ -20,7 +20,7 @@ function init()
 	}
 
 	poke16(0x0a14, 16)
-	poke16(0x0a16, 16)
+	poke16(0x0a16, 24)
 	poke(0x0a19, 0x01)
 	poke(0x0a1a, 0x00)
 	poke(0x0a1b, 0x00)
@@ -54,11 +54,11 @@ function frame()
 
 	if ((peek(0x580 + 0x41) & 1) != 0) {
 		// cursor left
-		offset_x +=2
+		offset_x += 1
 	}
 	if ((peek(0x580 + 0x44) & 1)!= 0) {
 		// cursor right
-		offset_x -=2
+		offset_x -= 1
 	}
 	if ((peek(0x580 + 0x42) & 1) != 0) {
 		// cursor up
@@ -69,17 +69,22 @@ function frame()
 		offset_y -= 1
 	}
 
-	local offset_z = 0
-
-	for (local z=-1; z<2; z++) {
+	for (local z=0; z<2; z++) {
 		for (local y=-40; y<40; y++) {
 			for (local x=-40; x<40; x++) {
 				local dist = (x*x)+(y*y)
 
-				local ry = (-(offset_y-81)/8) + ((offset_x-136)/16)
-				local rx = (-(offset_y-81)/8) + (-(offset_x-136)/16)
+				local ry = (81-offset_y)/16
+				local rx = (-(offset_x-136)/16)
 				local od = (rx-x)*(rx-x)+(ry-y)*(ry-y)
-				if (od <= 85) {
+				if (od <= 45) {
+					poke(0x819, 255)
+					poke(0x81a, 255)
+					poke(0x81b, 255)
+					// poke(0x819, 255-(3*od))
+					// poke(0x81a, 255-(3*od))
+					// poke(0x81b, 255-(3*od))
+				} else if (od <= 65) {
 					poke(0x819, 255-(3*od))
 					poke(0x81a, 255-(3*od))
 					poke(0x81b, 255-(3*od))
@@ -89,18 +94,18 @@ function frame()
 					poke(0x81b, 0)
 				}
 
-				if (z == -1) {
-					poke(0x0a1f, 2)	// dirt
+				if (z == 0) {
+					poke(0x0a1f, 1)	// dirt
 					if (dist < 400) {
-						poke16(0x0a10, offset_x + (8 * x) - (8 * y))
-						poke16(0x0a12, offset_y + (4 * x) + (4 * y) - (8 * z))
+						poke16(0x0a10, offset_x + (16 * x))
+						poke16(0x0a12, offset_y + (16 * y) - (8 * z))
 						poke(0x801, 0x01)
 					}
 				} else {
-					poke(0x0a1f, 3)	// stones
-					if ((dist < 200) && (dist > 50)) {
-						poke16(0x0a10, offset_x + (8 * x) - (8 * y))
-						poke16(0x0a12, offset_y + (4 * x) + (4 * y) - (8 * z))
+					poke(0x0a1f, 0)	// stones
+					if ((dist < 100) && (dist > 30)) {
+						poke16(0x0a10, offset_x + (16 * x))
+						poke16(0x0a12, offset_y + (14 * y) - (7 * z))
 						poke(0x801, 0x01)
 					}
 				}
@@ -112,7 +117,7 @@ function frame()
 	poke(0x819, 0xff)
 	poke(0x81a, 0xff)
 	poke(0x81b, 0xff)
-	poke16(0x0808, 160)
-	poke16(0x080a, 100)
+	poke16(0x0808, 144)
+	poke16(0x080a, 81)
 	poke(0x801, 0x08)
 }

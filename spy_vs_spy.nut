@@ -63,10 +63,10 @@ function draw_lines() {
 	while (true) {
 		breakhere(1)
 		solid_rectangle(150, 90, 155, 110, 0xc3, 0)
-		line(x0, y0, 319 - x0, 199, 51, 0)
-		line(x0, 199, 319 - x0, 0, 51, 0)
+		line(x0, y0, 287 - x0, 161, 51, 0)
+		line(x0, 161, 287 - x0, 0, 51, 0)
 		x0 = x0 + dx
-		if (x0 == 319) dx = -dx
+		if (x0 == 287) dx = -dx
 		if (x0 == 0) dx = -dx
 		rectangle(10, 10, 40, 40, 0xc3, 0)
 	}
@@ -85,9 +85,9 @@ function frame() {
 
 	co_lines.wakeup()
 
-	for (local x=0x000; x<0x140; x++) {
+	for (local x=0; x<288; x++) {
 		pset(x, 0, x & 0xff, 0x0)
-		pset(0x140 - x, 199, x & 0xff, 0x0)
+		pset(287 - x, 161, x & 0xff, 0x0)
 	}
 
 	poke(0x802, 0xe) // source is font
@@ -96,7 +96,7 @@ function frame() {
 	poke16(0xae2, 0x30) // ypos
 
 	local name = "Spy vs Spy Theme Music, (c)1984 Nick Scarim / Hiroyuki Masuno"
-	local x = 0x20
+	local x = 22
 
 	for (local l=0; l < name.len(); l++) {
 		poke(0xaef, name[l]) // index to first letter, which is 1 bit color
